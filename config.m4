@@ -13,9 +13,9 @@ dnl [  --with-fildes             Include fildes support])
 
 dnl Otherwise use enable:
 
-dnl PHP_ARG_ENABLE(fildes, whether to enable fildes support,
+PHP_ARG_ENABLE(fildes, whether to enable fildes support,
 dnl Make sure that the comment is aligned:
-dnl [  --enable-fildes           Enable fildes support])
+[  --enable-fildes           Enable fildes support])
 
 if test "$PHP_FILDES" != "no"; then
   dnl Write more examples of tests here...
