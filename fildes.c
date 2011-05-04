@@ -41,6 +41,7 @@ static int le_fildes;
 const zend_function_entry fildes_functions[] = {
 	PHP_FE(fildes_fileno,	NULL)
 	PHP_FE(fildes_fdopen,	NULL)
+	PHP_FE(fildes_dup2,	NULL)
 	{NULL, NULL, NULL}	/* Must be the last line in fildes_functions[] */
 };
 /* }}} */
@@ -145,7 +146,7 @@ PHP_MINFO_FUNCTION(fildes)
 /* }}} */
 
 
-/* {{{ proto long fildes_fileno(resource fp)
+/* {{{ proto int fildes_fileno(resource fp)
    Return the file descriptor for the given file pointer */
 PHP_FUNCTION(fildes_fileno)
 {
@@ -166,21 +167,41 @@ PHP_FUNCTION(fildes_fileno)
 }
 /* }}} */
 
-/* {{{ proto long fildes_fdopen(int fd, string mode)
+/* {{{ proto resource fildes_fdopen(int fd, string mode)
    Open an file pointer for the given file descriptor */
 PHP_FUNCTION(fildes_fdopen)
 {
-    long fd;
+    int fd;
     char *mode;
     int mode_len;
 
     if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ls", &fd, &mode, &mode_len) == FAILURE) {
-        RETURN_NULL();
+        RETURN_FALSE;
     }
     php_stream * stream = php_stream_fopen_from_fd(fd, mode, NULL);
     php_stream_to_zval(stream, return_value);
 }
 /* }}} */
+
+/* {{{ proto int fildes_dup2(int fd1, int fd2)
+   Duplicate an open file descriptor */
+PHP_FUNCTION(fildes_dup2)
+{
+    int fd1;
+    int fd2;
+    int result;
+
+    result = dup2(fd1, fd2);
+
+    if (result > 0) {
+      RETURN_LONG(result);
+    }
+    else {
+        RETURN_FALSE;
+    }
+}
+/* }}} */
+
 
 /*
  * Local variables:

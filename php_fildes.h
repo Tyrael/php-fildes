@@ -44,6 +44,7 @@ PHP_MINFO_FUNCTION(fildes);
 
 PHP_FUNCTION(fildes_fileno);
 PHP_FUNCTION(fildes_fdopen);
+PHP_FUNCTION(fildes_dup2);
 
 /* 
   	Declare any global variables you may need between the BEGIN
