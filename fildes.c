@@ -39,7 +39,8 @@ static int le_fildes;
  * Every user visible function must have an entry in fildes_functions[].
  */
 const zend_function_entry fildes_functions[] = {
-	PHP_FE(confirm_fildes_compiled,	NULL)		/* For testing, remove later. */
+	PHP_FE(fildes_fileno,	NULL)
+	PHP_FE(fildes_fdopen,	NULL)
 	{NULL, NULL, NULL}	/* Must be the last line in fildes_functions[] */
 };
 /* }}} */
@@ -144,33 +145,42 @@ PHP_MINFO_FUNCTION(fildes)
 /* }}} */
 
 
-/* Remove the following function when you have succesfully modified config.m4
-   so that your module can be compiled into PHP, it exists only for testing
-   purposes. */
-
-/* Every user-visible function in PHP should document itself in the source */
-/* {{{ proto string confirm_fildes_compiled(string arg)
-   Return a string to confirm that the module is compiled in */
-PHP_FUNCTION(confirm_fildes_compiled)
+/* {{{ proto long fildes_fileno(resource fp)
+   Return the file descriptor for the given file pointer */
+PHP_FUNCTION(fildes_fileno)
 {
-	char *arg = NULL;
-	int arg_len, len;
-	char *strg;
+    zval *zstream;
+    int fd;
+    php_stream *stream = NULL;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &arg, &arg_len) == FAILURE) {
-		return;
-	}
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "r", &zstream) == FAILURE) {
+        RETURN_FALSE;
+    }
 
-	len = spprintf(&strg, 0, "Congratulations! You have successfully modified ext/%.78s/config.m4. Module %.78s is now compiled into PHP.", "fildes", arg);
-	RETURN_STRINGL(strg, len, 0);
+    php_stream_from_zval(stream, &zstream);
+    if (FAILURE == php_stream_cast(stream, PHP_STREAM_AS_FD, (void **)&fd, REPORT_ERRORS)) {
+        RETURN_FALSE;
+    }
+
+    RETURN_LONG(fd);
 }
 /* }}} */
-/* The previous line is meant for vim and emacs, so it can correctly fold and 
-   unfold functions in source code. See the corresponding marks just before 
-   function definition, where the functions purpose is also documented. Please 
-   follow this convention for the convenience of others editing your code.
-*/
 
+/* {{{ proto long fildes_fdopen(int fd, string mode)
+   Open an file pointer for the given file descriptor */
+PHP_FUNCTION(fildes_fdopen)
+{
+    long fd;
+    char *mode;
+    int mode_len;
+
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ls", &fd, &mode, &mode_len) == FAILURE) {
+        RETURN_NULL();
+    }
+    php_stream * stream = php_stream_fopen_from_fd(fd, mode, NULL);
+    php_stream_to_zval(stream, return_value);
+}
+/* }}} */
 
 /*
  * Local variables:

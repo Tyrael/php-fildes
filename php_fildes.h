@@ -42,7 +42,8 @@ PHP_RINIT_FUNCTION(fildes);
 PHP_RSHUTDOWN_FUNCTION(fildes);
 PHP_MINFO_FUNCTION(fildes);
 
-PHP_FUNCTION(confirm_fildes_compiled);	/* For testing, remove later. */
+PHP_FUNCTION(fildes_fileno);
+PHP_FUNCTION(fildes_fdopen);
 
 /* 
   	Declare any global variables you may need between the BEGIN
