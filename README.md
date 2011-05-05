@@ -14,8 +14,8 @@ usage
     <?php
     $stdout = fopen("out.log", "a");
     if(fildes_dup2(fildes_fileno($stdout), fildes_fileno(STDOUT))<0){
-	fwrite(STDERR, "dup2 failed");
-	exit;
+        fwrite(STDERR, "dup2 failed");
+        exit;
     }
     echo "Hello world!"; // this goes to out.log
 
