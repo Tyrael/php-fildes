@@ -39,6 +39,7 @@ static int le_fildes;
  * Every user visible function must have an entry in fildes_functions[].
  */
 const zend_function_entry fildes_functions[] = {
+	PHP_FE(fildes_close,	NULL)
 	PHP_FE(fildes_fileno,	NULL)
 	PHP_FE(fildes_fdopen,	NULL)
 	PHP_FE(fildes_dup2,	NULL)
@@ -146,6 +147,25 @@ PHP_MINFO_FUNCTION(fildes)
 /* }}} */
 
 
+/* {{{ proto bool fildes_close(int fd)
+   Close the given file descriptor */
+PHP_FUNCTION(fildes_close)
+{
+    int fd;
+
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &fd) == FAILURE) {
+        RETURN_FALSE;
+    }
+
+    if (close(fd) == 0) {
+        RETURN_TRUE;
+    }
+    else{
+        RETURN_FALSE;
+    }
+}
+/* }}} */
+
 /* {{{ proto int fildes_fileno(resource fp)
    Return the file descriptor for the given file pointer */
 PHP_FUNCTION(fildes_fileno)
@@ -188,12 +208,16 @@ PHP_FUNCTION(fildes_fdopen)
 PHP_FUNCTION(fildes_dup2)
 {
     int fd1;
-    int fd2;
+    long fd2; /* FIXME: If I set both fd1, and fd2 to int, the fd1 will be always 0. :/ */
     int result;
+
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ll", &fd1, &fd2) == FAILURE) {
+        RETURN_FALSE;
+    }
 
     result = dup2(fd1, fd2);
 
-    if (result > 0) {
+    if (result >= 0) {
       RETURN_LONG(result);
     }
     else {
