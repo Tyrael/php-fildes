@@ -9,7 +9,7 @@ provided functions
 * fildes_dup
 * fildes_dup2
 
-example
+usage
 ----------------
 <?php
 $stdout_fd_orig = fildes_fileno(STDOUT);
@@ -21,4 +21,11 @@ if($stdout_fd != $fd_tmp){
         fildes_close($fd_tmp);
 }
 echo "Hello world!"; // this goes to out.log
+
+installation
+----------------
+phpize
+./configure
+make
+make install
 
