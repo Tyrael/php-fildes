@@ -147,11 +147,11 @@ PHP_MINFO_FUNCTION(fildes)
 /* }}} */
 
 
-/* {{{ proto bool fildes_close(int fd)
+/* {{{ proto bool fildes_close(long fd)
    Close the given file descriptor */
 PHP_FUNCTION(fildes_close)
 {
-    int fd;
+    long fd;
 
     if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &fd) == FAILURE) {
         RETURN_FALSE;
@@ -171,7 +171,7 @@ PHP_FUNCTION(fildes_close)
 PHP_FUNCTION(fildes_fileno)
 {
     zval *zstream;
-    int fd;
+    long fd;
     php_stream *stream = NULL;
 
     if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "r", &zstream) == FAILURE) {
@@ -187,11 +187,11 @@ PHP_FUNCTION(fildes_fileno)
 }
 /* }}} */
 
-/* {{{ proto resource fildes_fdopen(int fd, string mode)
+/* {{{ proto resource fildes_fdopen(long fd, string mode)
    Open an file pointer for the given file descriptor */
 PHP_FUNCTION(fildes_fdopen)
 {
-    int fd;
+    long fd;
     char *mode;
     int mode_len;
 
@@ -203,13 +203,12 @@ PHP_FUNCTION(fildes_fdopen)
 }
 /* }}} */
 
-/* {{{ proto int fildes_dup2(int fd1, int fd2)
+/* {{{ proto int fildes_dup2(long fd1, long fd2)
    Duplicate an open file descriptor */
 PHP_FUNCTION(fildes_dup2)
 {
-    int fd1;
-    long fd2; /* FIXME: If I set both fd1, and fd2 to int, the fd1 will be always 0. :/ */
-    int result;
+    long fd1, fd2;
+    long result;
 
     if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ll", &fd1, &fd2) == FAILURE) {
         RETURN_FALSE;
