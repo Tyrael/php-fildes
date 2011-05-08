@@ -171,7 +171,7 @@ PHP_FUNCTION(fildes_close)
 PHP_FUNCTION(fildes_fileno)
 {
     zval *zstream;
-    long fd;
+    int fd;
     php_stream *stream = NULL;
 
     if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "r", &zstream) == FAILURE) {
